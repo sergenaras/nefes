@@ -1,19 +1,19 @@
 :root {
-    --bg-color: #1a1a2e;
-    --sidebar-bg: #16213e;
-    --text-color: #e94560;
-    --circle-color: #0f3460;
-    --accent-color: #e94560;
-    --text-white: #ffffff;
+    /* İstenen Renk Paleti */
+    --c-bg: #0f3944;       /* color1 - Ana Arka Plan */
+    --c-sidebar: #206a95;  /* color2 - Sidebar */
+    --c-accent: #b27a3a;   /* color3 - Aktif Durum / Vurgu */
+    --c-secondary: #d9c782;/* color4 - Pasif İkonlar / Başlıklar */
+    --c-text: #e8e8c7;     /* color5 - Metinler */
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
-body { background-color: var(--bg-color); color: var(--text-white); height: 100vh; overflow: hidden; }
+body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overflow: hidden; }
 
 .container { display: flex; height: 100%; }
 
-/* --- Ana Alan (Animasyon) --- */
+/* --- Ana Alan --- */
 .main-content {
     flex: 3;
     display: flex;
@@ -21,86 +21,125 @@ body { background-color: var(--bg-color); color: var(--text-white); height: 100v
     justify-content: center;
     align-items: center;
     position: relative;
+    padding: 20px;
 }
 
-.breathing-container {
+/* Nefes Çemberi Alanı */
+.breathing-wrapper {
     position: relative;
-    width: 300px;
-    height: 300px;
+    /* Ekranın kısa kenarının %40'ı kadar (Telefonda da PC'de de taşmaz) */
+    width: 40vmin; 
+    height: 40vmin;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 30px;
 }
 
-/* Dış Sabit Çember */
-.circle-outer {
-    position: absolute;
+/* Genişleyen/Daralan Daire */
+.circle-visual {
     width: 100%;
     height: 100%;
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--c-accent);
     border-radius: 50%;
-    z-index: 1;
+    transform: scale(0.3); /* Başlangıç */
+    box-shadow: 0 0 40px rgba(178, 122, 58, 0.4);
+    will-change: transform;
+    /* Sınır çizgisi yok, sadece renk topu */
 }
 
-/* İç Genişleyen Çember (Silindir etkisi) */
-.circle-inner {
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, var(--circle-color) 0%, var(--sidebar-bg) 100%);
+/* --- Alt Göstergeler (Phases) --- */
+.phases-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Pasif Yuvarlak */
+.phase-bubble {
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
+    background-color: rgba(32, 106, 149, 0.5); /* Color2'nin şeffaf hali */
+    color: var(--c-secondary); /* Color4 */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 2;
-    box-shadow: 0 0 20px rgba(15, 52, 96, 0.5);
-    transform: scale(0.3); /* Başlangıç boyutu */
-    transition: transform 0.5s ease-in-out; /* JS ile süreyi değiştireceğiz */
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
 }
 
-#instruction-text { font-size: 1.5rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
-#timer-text { font-size: 3rem; font-weight: bold; margin-top: 10px; }
-#current-technique-title { margin-top: 40px; color: var(--text-color); letter-spacing: 1px; }
+.phase-bubble svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    margin-bottom: 2px;
+}
+
+.phase-bubble span {
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+/* Aktif Yuvarlak (Sıra bundayken) */
+.phase-bubble.active {
+    background-color: var(--c-accent); /* Color3 */
+    color: var(--c-bg); /* Color1 (Kontrast için koyu) */
+    transform: scale(1.15);
+    box-shadow: 0 0 15px rgba(178, 122, 58, 0.6);
+    border-color: var(--c-text);
+}
+
+#current-technique-title {
+    color: var(--c-secondary);
+    margin-top: 20px;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
 
 /* --- Sidebar --- */
 .sidebar {
     flex: 1;
-    background-color: var(--sidebar-bg);
+    background-color: var(--c-sidebar);
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    border-left: 1px solid rgba(255,255,255,0.05);
+    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+    z-index: 10;
 }
 
-.sidebar h3 { color: var(--accent-color); margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; display: inline-block; }
+.sidebar h3 { color: var(--c-secondary); border-bottom: 2px solid var(--c-secondary); padding-bottom: 10px; margin-bottom: 1.5rem; }
 
 .technique-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
 
 .tech-btn {
     padding: 15px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(15, 57, 68, 0.4); /* Color1 transparan */
     border: none;
-    color: white;
+    color: var(--c-text);
     cursor: pointer;
     text-align: left;
+    border-radius: 8px;
     transition: 0.3s;
-    border-radius: 5px;
-    font-size: 1rem;
 }
 
-.tech-btn:hover { background: rgba(233, 69, 96, 0.2); }
-.tech-btn.active { background: var(--accent-color); font-weight: bold; }
+.tech-btn:hover { background: rgba(15, 57, 68, 0.7); }
+.tech-btn.active { background: var(--c-accent); color: var(--c-bg); font-weight: bold; }
 
-.info-box { background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 10px; flex-grow: 1; }
-.info-box h4 { color: #ddd; margin-bottom: 10px; }
-.info-box p { font-size: 0.9rem; line-height: 1.6; color: #bbb; }
+.info-box { background: rgba(15, 57, 68, 0.3); padding: 1.5rem; border-radius: 10px; flex-grow: 1; }
+.technique-details { margin-top: 15px; font-size: 0.9rem; color: var(--c-secondary); }
 
-.technique-details { margin-top: 15px; font-size: 0.85rem; color: #888; }
-
-/* Mobil Uyumluluk */
+/* --- Mobil Uyumluluk --- */
 @media (max-width: 768px) {
     .container { flex-direction: column-reverse; overflow-y: auto; }
-    .sidebar { flex: none; width: 100%; height: auto; }
-    .main-content { height: 60vh; }
-    .breathing-container { width: 200px; height: 200px; }
+    .sidebar { width: 100%; flex: none; min-height: 40vh; }
+    .main-content { min-height: 60vh; padding: 10px; }
+    
+    .phase-bubble { width: 50px; height: 50px; }
+    .phase-bubble svg { width: 20px; height: 20px; }
+    .phase-bubble span { font-size: 0.6rem; }
 }
