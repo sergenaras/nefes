@@ -1,0 +1,106 @@
+:root {
+    --bg-color: #1a1a2e;
+    --sidebar-bg: #16213e;
+    --text-color: #e94560;
+    --circle-color: #0f3460;
+    --accent-color: #e94560;
+    --text-white: #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+body { background-color: var(--bg-color); color: var(--text-white); height: 100vh; overflow: hidden; }
+
+.container { display: flex; height: 100%; }
+
+/* --- Ana Alan (Animasyon) --- */
+.main-content {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.breathing-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Dış Sabit Çember */
+.circle-outer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* İç Genişleyen Çember (Silindir etkisi) */
+.circle-inner {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, var(--circle-color) 0%, var(--sidebar-bg) 100%);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    box-shadow: 0 0 20px rgba(15, 52, 96, 0.5);
+    transform: scale(0.3); /* Başlangıç boyutu */
+    transition: transform 0.5s ease-in-out; /* JS ile süreyi değiştireceğiz */
+}
+
+#instruction-text { font-size: 1.5rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
+#timer-text { font-size: 3rem; font-weight: bold; margin-top: 10px; }
+#current-technique-title { margin-top: 40px; color: var(--text-color); letter-spacing: 1px; }
+
+/* --- Sidebar --- */
+.sidebar {
+    flex: 1;
+    background-color: var(--sidebar-bg);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(255,255,255,0.05);
+}
+
+.sidebar h3 { color: var(--accent-color); margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; display: inline-block; }
+
+.technique-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
+
+.tech-btn {
+    padding: 15px;
+    background: rgba(255,255,255,0.05);
+    border: none;
+    color: white;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.3s;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.tech-btn:hover { background: rgba(233, 69, 96, 0.2); }
+.tech-btn.active { background: var(--accent-color); font-weight: bold; }
+
+.info-box { background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 10px; flex-grow: 1; }
+.info-box h4 { color: #ddd; margin-bottom: 10px; }
+.info-box p { font-size: 0.9rem; line-height: 1.6; color: #bbb; }
+
+.technique-details { margin-top: 15px; font-size: 0.85rem; color: #888; }
+
+/* Mobil Uyumluluk */
+@media (max-width: 768px) {
+    .container { flex-direction: column-reverse; overflow-y: auto; }
+    .sidebar { flex: none; width: 100%; height: auto; }
+    .main-content { height: 60vh; }
+    .breathing-container { width: 200px; height: 200px; }
+}

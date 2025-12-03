@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nefes Asistanı</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="breathing-container">
+                <div class="circle-outer"></div>
+                <div class="circle-inner" id="breathing-circle">
+                    <span id="instruction-text">Hazır</span>
+                    <span id="timer-text"></span>
+                </div>
+            </div>
+            <h2 id="current-technique-title">Teknik Seçiniz</h2>
+        </main>
+
+        <aside class="sidebar">
+            <h3>Nefes Teknikleri</h3>
+            <div class="technique-list">
+                <button onclick="setTechnique('calm')" class="tech-btn active">4-7-8 (Sakinleşme)</button>
+                <button onclick="setTechnique('box')" class="tech-btn">Kutu Tekniği (Odak)</button>
+                <button onclick="setTechnique('energy')" class="tech-btn">Isınma (Enerji/Tummo)</button>
+                <button onclick="setTechnique('coherence')" class="tech-btn">Rezonans (Denge)</button>
+            </div>
+
+            <div class="info-box">
+                <h4>Teknik Açıklaması</h4>
+                <p id="technique-desc">
+                    4-7-8 tekniği, sinir sistemini yatıştırmak ve uykuya geçişi kolaylaştırmak için kullanılır. Kaygı seviyesini düşürür.
+                </p>
+                <div class="technique-details" id="technique-steps">
+                    </div>
+            </div>
+        </aside>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
