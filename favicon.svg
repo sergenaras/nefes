@@ -1,10 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="16" fill="#1a1a2e"/>
-  
-  <circle cx="32" cy="32" r="24" stroke="#ffffff" stroke-width="2" stroke-opacity="0.3" fill="none"/>
-  
-  <circle cx="32" cy="32" r="12" fill="#e94560">
-    <animate attributeName="r" values="12;16;12" dur="3s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="1;0.8;1" dur="3s" repeatCount="indefinite" />
-  </circle>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M32 58C32 58 32 40 32 12" stroke="#5a6b4e" stroke-width="3" stroke-linecap="round"/>
+
+    <path d="M32 42C20 44 8 36 8 26C8 18 20 22 32 30" fill="#8b9a7a"/>
+    <path d="M14 28C18 30 24 32 32 30" stroke="#c9d5b8" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+
+    <path d="M32 36C44 38 56 30 56 20C56 12 44 16 32 24" fill="#8b9a7a"/>
+    <path d="M50 22C46 24 40 26 32 24" stroke="#c9d5b8" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+
+    <path d="M32 24C24 22 16 16 16 10C16 6 24 8 32 16" fill="#8b9a7a"/>
+    
+    <path d="M32 18C38 16 44 12 44 8C44 4 36 6 32 12" fill="#8b9a7a"/>
+
+    <path d="M32 12C28 6 32 2 32 2C32 2 36 6 32 12Z" fill="#c9d5b8"/>
 </svg>
