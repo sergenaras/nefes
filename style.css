@@ -1,19 +1,34 @@
 :root {
-    /* KULLANICI PALETİ */
-    --c-bg: #381d2e;       /* color1 - Arka Plan */
-    --c-sidebar: #7a434e;  /* color2 - Sidebar / İkincil */
-    --c-accent: #2b8fc8;   /* color3 - Nefes Topu / Aktif Faz */
-    --c-secondary: #e8c1e8;/* color4 - Pasif İkonlar / Başlıklar */
-    --c-text: #f3f3f3;     /* color5 - Metinler */
+    /* ORGANİK TEMA PALETİ */
+    --c-bg: #2d4a3e;       /* Koyu yeşil orman */
+    --c-sidebar: #3d5a4e;  /* Hafif açık yeşil */
+    --c-accent: #8b9a7a;   /* Pastel yeşil (nefes topu) */
+    --c-secondary: #c9d5b8;/* Açık yeşil krem (başlıklar) */
+    --c-text: #f4e8c1;     /* Krem beyaz (metinler) */
+    --c-glow: #a3b499;     /* Yumuşak glow tonu */
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Georgia', 'Palatino', serif; /* Organik his için serif */
+}
 
-body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overflow: hidden; }
+body { 
+    background: linear-gradient(135deg, var(--c-bg) 0%, #3d5a4e 100%);
+    color: var(--c-text); 
+    height: 100vh; 
+    overflow: hidden; 
+}
 
-.container { display: flex; height: 100%; width: 100%; }
+.container { 
+    display: flex; 
+    height: 100%; 
+    width: 100%; 
+}
 
-/* --- Ana Alan (Animasyon) --- */
+/* --- Ana Alan --- */
 .main-content {
     flex: 3;
     display: flex;
@@ -34,19 +49,38 @@ body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overf
     align-items: center;
     margin-bottom: 40px; 
     cursor: pointer; 
-    -webkit-tap-highlight-color: transparent; /* Mobilde tıklama efektini kaldır */
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* Nefes Topu */
+/* Nefes Topu - ORGANİK */
 .circle-visual {
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, var(--c-accent) 0%, var(--c-sidebar) 100%);
-    border-radius: 50%;
-    transform: scale(1); /* Varsayılan: FULL DOLU */
-    box-shadow: 0 0 50px rgba(43, 143, 200, 0.3);
-    will-change: transform;
-    transition: transform 0.1s linear; /* JS override edecek ama default kalsın */
+    background: radial-gradient(circle, #8b9a7a 0%, #5a6b4e 100%);
+    border-radius: 47% 53% 45% 55% / 53% 47% 53% 47%; /* Organik şekil */
+    transform: scale(1);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(139, 154, 122, 0.2),
+        inset 0 0 40px rgba(201, 213, 184, 0.15);
+    will-change: transform, border-radius;
+    transition: transform 0.1s linear;
+    animation: organicMorphSubtle 12s ease-in-out infinite;
+}
+
+@keyframes organicMorphSubtle {
+    0%, 100% { 
+        border-radius: 47% 53% 45% 55% / 53% 47% 53% 47%;
+    }
+    25% { 
+        border-radius: 55% 45% 53% 47% / 47% 53% 47% 53%;
+    }
+    50% { 
+        border-radius: 45% 55% 47% 53% / 53% 47% 53% 47%;
+    }
+    75% { 
+        border-radius: 53% 47% 55% 45% / 47% 53% 47% 53%;
+    }
 }
 
 /* BAŞLA Overlay */
@@ -63,26 +97,27 @@ body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overf
 
 .start-text {
     font-size: 2rem;
-    font-weight: bold;
+    font-weight: 400;
     color: var(--c-text);
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    background: rgba(0,0,0,0.3);
-    padding: 10px 30px;
-    border-radius: 50px;
-    border: 2px solid var(--c-text);
+    text-transform: lowercase;
+    letter-spacing: 6px;
+    background: rgba(45, 74, 62, 0.7);
+    padding: 15px 35px;
+    border-radius: 40px;
+    border: 2px solid rgba(201, 213, 184, 0.5);
     white-space: nowrap;
+    backdrop-filter: blur(5px);
 }
 
 .breathing-wrapper:hover .start-text {
-    background: var(--c-accent);
-    border-color: var(--c-accent);
+    background: rgba(139, 154, 122, 0.5);
+    border-color: var(--c-secondary);
 }
 
 /* --- Alt Göstergeler (Phases) --- */
 .phases-container {
     display: flex;
-    gap: 15px;
+    gap: 18px;
     margin-bottom: 20px;
     justify-content: center;
     align-items: center;
@@ -91,106 +126,164 @@ body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overf
 }
 
 .phase-bubble {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: rgba(122, 67, 78, 0.3); /* Color2 şeffaf */
+    width: 65px;
+    height: 65px;
+    background: rgba(139, 154, 122, 0.2);
+    border: 2px solid rgba(201, 213, 184, 0.4);
+    border-radius: 40% 60% 50% 50% / 60% 40% 60% 40%; /* Organik şekil */
     color: var(--c-secondary); 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
+    transition: all 0.5s ease;
 }
 
-.phase-bubble svg { width: 24px; height: 24px; fill: currentColor; }
-.phase-bubble span { font-size: 0.7rem; font-weight: 600; margin-top: 2px; }
+.phase-bubble svg { 
+    width: 24px; 
+    height: 24px; 
+    fill: currentColor; 
+}
+
+.phase-bubble span { 
+    font-size: 0.7rem; 
+    font-weight: 400; 
+    margin-top: 3px; 
+}
 
 .phase-bubble.active {
-    background-color: var(--c-accent); 
-    color: #fff;
+    background: rgba(201, 213, 184, 0.3);
+    border-color: var(--c-secondary);
+    color: var(--c-text);
     transform: scale(1.15);
-    box-shadow: 0 0 20px rgba(43, 143, 200, 0.5);
-    border-color: #fff;
+    box-shadow: 0 0 25px rgba(201, 213, 184, 0.4);
+    border-radius: 50%; /* Aktif olunca yuvarlaklaşır */
 }
 
 #current-technique-title {
     color: var(--c-secondary);
     margin-top: 10px;
     font-weight: 300;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     text-align: center;
+    font-size: 1.1rem;
 }
 
-/* --- Sidebar (Masaüstü) --- */
+/* --- Sidebar --- */
 .sidebar {
     flex: 1;
-    background-color: var(--c-sidebar);
+    background: rgba(45, 74, 62, 0.8);
+    backdrop-filter: blur(10px);
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    box-shadow: -5px 0 20px rgba(0,0,0,0.3);
+    box-shadow: -5px 0 20px rgba(0,0,0,0.4);
     z-index: 20;
     min-width: 300px;
+    border-left: 2px solid rgba(139, 154, 122, 0.3);
 }
 
 .sidebar h3 { 
     color: var(--c-secondary); 
-    border-bottom: 2px solid var(--c-secondary); 
-    padding-bottom: 10px; 
+    border-bottom: 2px solid rgba(139, 154, 122, 0.4); 
+    padding-bottom: 12px; 
     margin-bottom: 1.5rem; 
+    font-weight: 300;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
 }
 
-.technique-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
+.technique-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+    margin-bottom: 2rem; 
+}
 
 .tech-btn {
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.2); 
-    border: none;
-    color: var(--c-text);
+    padding: 15px 20px;
+    background: rgba(139, 154, 122, 0.15); 
+    border: 1px solid rgba(201, 213, 184, 0.3);
+    color: var(--c-secondary);
     cursor: pointer;
     text-align: left;
-    border-radius: 8px;
-    transition: 0.3s;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.tech-btn:hover { 
+    background: rgba(139, 154, 122, 0.25); 
+    border-color: var(--c-accent);
+    transform: translateX(5px);
+}
+
+.tech-btn.active { 
+    background: rgba(201, 213, 184, 0.25); 
+    border-color: var(--c-secondary);
+    color: var(--c-text); 
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(139, 154, 122, 0.3);
+}
+
+.info-box { 
+    background: rgba(139, 154, 122, 0.15); 
+    padding: 1.5rem; 
+    border-radius: 12px; 
+    flex-grow: 1;
+    border: 1px solid rgba(201, 213, 184, 0.2);
+}
+
+.info-box h4 { 
+    margin-bottom: 10px; 
+    color: var(--c-secondary); 
+    font-weight: 400;
     font-size: 1rem;
 }
 
-.tech-btn:hover { background: rgba(0, 0, 0, 0.4); }
-.tech-btn.active { background: var(--c-accent); color: #fff; font-weight: bold; }
+.info-box p {
+    color: var(--c-glow);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
 
-.info-box { background: rgba(0, 0, 0, 0.2); padding: 1.5rem; border-radius: 10px; flex-grow: 1; }
-.info-box h4 { margin-bottom: 10px; color: var(--c-secondary); }
-.technique-details { margin-top: 15px; font-size: 0.9rem; color: var(--c-secondary); font-weight: bold; }
+.technique-details { 
+    margin-top: 15px; 
+    font-size: 0.9rem; 
+    color: var(--c-text); 
+    font-weight: 500;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    border-left: 3px solid var(--c-accent);
+}
 
-/* --- MOBİL UYUMLULUK (Responsive Design) --- */
+/* --- MOBİL UYUMLULUK --- */
 @media (max-width: 768px) {
     
-    /* 1. Konteynır: Sıralamayı ters çevir (Sidebar üstte, Main altta) */
     .container {
         flex-direction: column-reverse; 
         overflow-y: auto;
     }
 
-    /* 2. Sidebar: Üstte ince bir menü şeridi */
     .sidebar {
         width: 100%;
         flex: none;
         min-height: auto;
         padding: 15px 10px;
-        background-color: rgba(56, 29, 46, 0.95); /* Color1'e yakın opak */
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        position: sticky; /* Sayfa kaydırılsa bile üstte kalsın istenirse */
+        background: rgba(45, 74, 62, 0.95);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        position: sticky;
         top: 0;
+        border-left: none;
+        border-bottom: 2px solid rgba(139, 154, 122, 0.3);
     }
 
-    /* Başlığı ve Detaylı Açıklama kutusunu mobilde gizle/değiştir */
     .sidebar h3 { display: none; }
-    .info-box { 
-        display: none; /* Mobilde açıklama kutusunu sidebar'dan kaldırıyoruz, aşağıya alacağız */
-    }
+    .info-box { display: none; }
 
-    /* 3. Buton Listesi: Yatay Kaydırma (Chips) */
+    /* Yatay Kaydırmalı Chips */
     .technique-list {
         flex-direction: row;
         overflow-x: auto;
@@ -199,66 +292,91 @@ body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overf
         margin-bottom: 0;
         padding-bottom: 5px;
         -webkit-overflow-scrolling: touch;
-        scrollbar-width: none; /* Firefox scrollbar gizle */
+        scrollbar-width: none;
     }
-    .technique-list::-webkit-scrollbar { display: none; } /* Chrome scrollbar gizle */
+    .technique-list::-webkit-scrollbar { display: none; }
 
     .tech-btn {
         flex: 0 0 auto;
         padding: 10px 20px;
         font-size: 0.9rem;
-        border-radius: 25px; /* Hap şekli */
-        background: rgba(255,255,255,0.1);
+        border-radius: 25px;
+        background: rgba(139, 154, 122, 0.2);
         text-align: center;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid rgba(201, 213, 184, 0.3);
     }
     
     .tech-btn.active {
-        background: var(--c-accent);
-        border-color: var(--c-accent);
+        background: rgba(201, 213, 184, 0.3);
+        border-color: var(--c-secondary);
         transform: scale(1.05);
-        box-shadow: 0 2px 10px rgba(43, 143, 200, 0.4);
+        box-shadow: 0 2px 10px rgba(139, 154, 122, 0.5);
+        color: var(--c-text);
     }
 
-    /* 4. Ana İçerik */
     .main-content {
         flex: 1;
-        justify-content: center; /* Ortala */
+        justify-content: center;
         padding-top: 20px;
         padding-bottom: 40px;
     }
 
-    /* Mobilde özel açıklama alanı (Main içinde gösterilecek, JS ile kontrol etmiyoruz, CSS ile hile yapıyoruz) */
-    /* Not: Mobilde açıklama metni görmek isteniyorsa JS güncellemesi gerekir, 
-       şimdilik sade arayüz için sadece teknik adı ve ikonlar yeterli. */
-
     .breathing-wrapper {
-        width: 70vmin; /* Mobilde daha büyük */
+        width: 70vmin;
         height: 70vmin;
     }
     
     .start-text {
         font-size: 1.5rem;
-        padding: 8px 24px;
+        padding: 12px 28px;
+        letter-spacing: 4px;
     }
 
     .phases-container {
-        gap: 10px;
+        gap: 12px;
     }
     
     .phase-bubble {
-        width: 50px;
-        height: 50px;
+        width: 55px;
+        height: 55px;
     }
     
-    .phase-bubble svg { width: 20px; height: 20px; }
-    .phase-bubble span { font-size: 0.6rem; }
+    .phase-bubble svg { 
+        width: 20px; 
+        height: 20px; 
+    }
     
-    /* Seçili teknik başlığını mobilde biraz daha yukarı al */
+    .phase-bubble span { 
+        font-size: 0.65rem; 
+    }
+    
     #current-technique-title {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         margin-bottom: 20px;
         margin-top: 0;
-        order: -1; /* Çemberin üstüne taşı */
+        order: -1;
+    }
+}
+
+/* --- EXTRA: Yumuşak Pulse Animasyonu (Opsiyonel) --- */
+@media (prefers-reduced-motion: no-preference) {
+    .circle-visual {
+        animation: organicMorphSubtle 12s ease-in-out infinite, 
+                   subtlePulse 6s ease-in-out infinite;
+    }
+    
+    @keyframes subtlePulse {
+        0%, 100% { 
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(139, 154, 122, 0.2),
+                inset 0 0 40px rgba(201, 213, 184, 0.15);
+        }
+        50% { 
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 60px rgba(139, 154, 122, 0.4),
+                inset 0 0 50px rgba(201, 213, 184, 0.25);
+        }
     }
 }
