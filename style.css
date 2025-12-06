@@ -114,50 +114,108 @@ body {
     border-color: var(--c-secondary);
 }
 
-/* --- Alt Göstergeler (Phases) --- */
+/* --- Alt Göstergeler (Phases) - GÜNCELLENDİ --- */
 .phases-container {
     display: flex;
-    gap: 18px;
+    gap: 25px; /* Yuvarlaklar arası boşluk */
     margin-bottom: 20px;
+    padding-bottom: 20px; /* Yazıların kesilmemesi için alt boşluk */
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Üstten hizala */
     flex-wrap: wrap;
-    min-height: 80px;
+    min-height: 120px; /* Yazıların sığması için yükseklik arttırıldı */
 }
 
+/* 1. Kapsayıcı (Bubble) */
 .phase-bubble {
     width: 65px;
     height: 65px;
-    background: rgba(139, 154, 122, 0.2);
-    border: 2px solid rgba(201, 213, 184, 0.4);
-    border-radius: 40% 60% 50% 50% / 60% 40% 60% 40%; /* Organik şekil */
-    color: var(--c-secondary); 
+    position: relative;
+    
+    /* ÖNEMLİ: Yazının dışarı taşmasına izin ver */
+    overflow: visible; 
+    
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: all 0.5s ease;
+    
+    transition: transform 0.3s ease;
 }
 
+/* 2. İKON (PNG ve SVG): Yuvarlak şekil ve stil */
+.phase-bubble .phase-icon,
 .phase-bubble svg { 
-    width: 24px; 
-    height: 24px; 
-    fill: currentColor; 
+    width: 100%;       
+    height: 100%;      
+    object-fit: cover; 
+    
+    border-radius: 50%; 
+    
+    /* Yuvarlak buton stili */
+    background: rgba(139, 154, 122, 0.2);
+    border: 2px solid rgba(201, 213, 184, 0.4);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    
+    z-index: 1; 
+    transition: all 0.3s ease;
 }
 
+/* SVG Fallback için özel ayar */
+.phase-bubble svg {
+    padding: 15px; 
+}
+
+/* 3. METİN (Span): İkonun ALTINA yerleşim */
 .phase-bubble span { 
-    font-size: 0.7rem; 
-    font-weight: 400; 
-    margin-top: 3px; 
+    position: absolute;
+    /* İkonun %115 aşağısından başlat (hemen altı) */
+    top: 115%; 
+    left: 50%;
+    transform: translateX(-50%); /* Yatayda ortala */
+    
+    width: 120px; /* Genişlik ver ki satıra sığsın */
+    text-align: center;
+    
+    font-size: 0.85rem; 
+    font-weight: 500;
+    color: var(--c-secondary); /* Temaya uygun açık yeşil */
+    letter-spacing: 0.5px;
+    
+    z-index: 2;
+    pointer-events: none;
+    
+    /* Eski gölgeyi kaldırdık, temiz görünüm */
+    text-shadow: none; 
 }
 
+/* --- AKTİF DURUMLAR --- */
+
+/* Aktif Kapsayıcı: Büyüsün */
 .phase-bubble.active {
-    background: rgba(201, 213, 184, 0.3);
-    border-color: var(--c-secondary);
-    color: var(--c-text);
     transform: scale(1.15);
-    box-shadow: 0 0 25px rgba(201, 213, 184, 0.4);
-    border-radius: 50%; /* Aktif olunca yuvarlaklaşır */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+/* Aktif İkon: Parlasın */
+.phase-bubble.active .phase-icon,
+.phase-bubble.active svg {
+    border-color: var(--c-secondary);
+    background: rgba(201, 213, 184, 0.3);
+    box-shadow: 0 0 20px rgba(201, 213, 184, 0.5);
+    filter: brightness(1.2);
+    opacity: 1;
+}
+
+/* Aktif Metin: Rengi canlansın */
+.phase-bubble.active span {
+    color: var(--c-text); /* Tam beyaz/krem */
+    font-weight: bold;
 }
 
 #current-technique-title {
@@ -333,12 +391,14 @@ body {
     }
 
     .phases-container {
-        gap: 12px;
+        gap: 15px; /* Mobilde ikonlar arası boşluk */
+        min-height: 100px;
     }
     
     .phase-bubble {
         width: 55px;
         height: 55px;
+        margin-bottom: 20px; /* Yazılar birbirine girmesin */
     }
     
     .phase-bubble svg { 
@@ -347,7 +407,8 @@ body {
     }
     
     .phase-bubble span { 
-        font-size: 0.65rem; 
+        font-size: 0.7rem; 
+        width: 100px;
     }
     
     #current-technique-title {
@@ -358,7 +419,7 @@ body {
     }
 }
 
-/* --- EXTRA: Yumuşak Pulse Animasyonu (Opsiyonel) --- */
+/* --- EXTRA: Yumuşak Pulse Animasyonu --- */
 @media (prefers-reduced-motion: no-preference) {
     .circle-visual {
         animation: organicMorphSubtle 12s ease-in-out infinite, 

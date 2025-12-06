@@ -14,20 +14,18 @@ let isActive = false;
 
 // --- 1. Başlangıç: Butonları Oluştur ---
 function init() {
-    techniqueListContainer.innerHTML = ''; // Temizle
+    techniqueListContainer.innerHTML = '';
     
-    // data.js içindeki 'techniques' objesindeki her anahtar için buton yap
     for (const key in techniques) {
         const tech = techniques[key];
         const btn = document.createElement('button');
         btn.className = 'tech-btn';
         btn.innerText = tech.name;
         btn.onclick = () => setTechnique(key);
-        btn.dataset.key = key; // Referans için
+        btn.dataset.key = key;
         techniqueListContainer.appendChild(btn);
     }
 
-    // Varsayılan olarak ilk tekniği seç (Genelde 'calm' veya 'candle')
     setTechnique('calm');
 }
 
@@ -35,13 +33,11 @@ function init() {
 function setTechnique(key) {
     stopSession();
     
-    // Buton stillerini güncelle
     document.querySelectorAll('.tech-btn').forEach(btn => {
         btn.classList.remove('active');
         if(btn.dataset.key === key) btn.classList.add('active');
     });
 
-    // Veriyi çek
     currentTechnique = techniques[key];
     currentTitle.innerText = currentTechnique.name;
     techniqueDesc.innerText = currentTechnique.desc;
@@ -63,11 +59,9 @@ function startSession() {
     isActive = true;
     overlay.style.opacity = '0';
     
-    // Hazırlık: Önce küçült
     circle.style.transition = 'transform 0.5s ease-out';
     circle.style.transform = 'scale(0.3)';
 
-    // Döngüyü başlat
     timeouts.push(setTimeout(() => {
         runCycle(0);
     }, 500));
@@ -80,7 +74,6 @@ function stopSession() {
     overlay.style.opacity = '1';
     overlayText.innerText = "BAŞLA";
     
-    // Reset: Full dolu göster
     circle.style.transition = 'transform 0.8s ease-out';
     circle.style.transform = 'scale(1)';
     
@@ -92,23 +85,54 @@ function clearAllTimeouts() {
     timeouts = [];
 }
 
-// --- 4. Görselleştirme ---
+// --- 4. Görselleştirme (İkonları PNG Dosyalarından Yükle) ---
 function createPhaseIndicators() {
     phasesContainer.innerHTML = '';
+    
     currentTechnique.cycle.forEach((phase, index) => {
         const bubble = document.createElement('div');
         bubble.className = 'phase-bubble';
         bubble.id = `phase-${index}`;
         
-        // Eğer data.js'te tanımlı olmayan bir ikon tipi gelirse varsayılanı kullan
-        const iconSvg = icons[phase.type] || icons['in'];
+        // İkon dosya yolunu kontrol et
+        const iconPath = iconFiles[phase.type];
         
-        const svgHTML = `<svg viewBox="0 0 24 24">${iconSvg}</svg>`;
-        bubble.innerHTML = `${svgHTML}<span>${phase.label}</span>`;
+        if (iconPath) {
+            // PNG dosyası varsa <img> tag ile yükle
+            const img = document.createElement('img');
+            img.src = iconPath;
+            img.alt = phase.label;
+            img.className = 'phase-icon';
+            
+            // Yükleme hatası durumunda fallback kullan
+            img.onerror = function() {
+                // Sessizce fallback'e geç
+                const iconSvg = icons[phase.type] || icons['in'];
+                bubble.innerHTML = `
+                    <svg viewBox="0 0 24 24">${iconSvg}</svg>
+                    <span>${phase.label}</span>
+                `;
+            };
+            
+            const span = document.createElement('span');
+            span.textContent = phase.label;
+            
+            bubble.appendChild(img);
+            bubble.appendChild(span);
+        } else {
+            // Fallback: data.js'teki inline SVG'leri kullan
+            const iconSvg = icons[phase.type] || icons['in'];
+            bubble.innerHTML = `
+                <svg viewBox="0 0 24 24">${iconSvg}</svg>
+                <span>${phase.label}</span>
+            `;
+        }
+        
         phasesContainer.appendChild(bubble);
     });
 }
 
+// --- 5. Animasyon Döngüsü ---
 function runCycle(stepIndex) {
     if (!isActive) return;
 
@@ -119,7 +143,10 @@ function runCycle(stepIndex) {
 
     // Fazı aktif et
     document.querySelectorAll('.phase-bubble').forEach(b => b.classList.remove('active'));
-    document.getElementById(`phase-${stepIndex}`).classList.add('active');
+    const activeBubble = document.getElementById(`phase-${stepIndex}`);
+    if (activeBubble) {
+        activeBubble.classList.add('active');
+    }
 
     // Animasyonu uygula
     circle.style.transition = `transform ${currentStep.duration}ms linear`;
