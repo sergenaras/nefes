@@ -11,9 +11,9 @@
 
 body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overflow: hidden; }
 
-.container { display: flex; height: 100%; }
+.container { display: flex; height: 100%; width: 100%; }
 
-/* --- Ana Alan --- */
+/* --- Ana Alan (Animasyon) --- */
 .main-content {
     flex: 3;
     display: flex;
@@ -32,8 +32,9 @@ body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overf
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 50px; /* Alttaki ikonlara yer açmak için */
-    cursor: pointer; /* Tıklanabilir hissi ver */
+    margin-bottom: 40px; 
+    cursor: pointer; 
+    -webkit-tap-highlight-color: transparent; /* Mobilde tıklama efektini kaldır */
 }
 
 /* Nefes Topu */
@@ -45,17 +46,17 @@ body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overf
     transform: scale(1); /* Varsayılan: FULL DOLU */
     box-shadow: 0 0 50px rgba(43, 143, 200, 0.3);
     will-change: transform;
-    /* Transition JS ile kontrol edilecek */
+    transition: transform 0.1s linear; /* JS override edecek ama default kalsın */
 }
 
-/* BAŞLA Overlay (Üst Katman) */
+/* BAŞLA Overlay */
 .start-overlay {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 10;
-    pointer-events: none; /* Tıklamayı wrapper alsın */
+    pointer-events: none;
     text-align: center;
     transition: opacity 0.3s ease;
 }
@@ -70,6 +71,7 @@ body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overf
     padding: 10px 30px;
     border-radius: 50px;
     border: 2px solid var(--c-text);
+    white-space: nowrap;
 }
 
 .breathing-wrapper:hover .start-text {
@@ -77,7 +79,7 @@ body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overf
     border-color: var(--c-accent);
 }
 
-/* --- Alt Göstergeler --- */
+/* --- Alt Göstergeler (Phases) --- */
 .phases-container {
     display: flex;
     gap: 15px;
@@ -113,7 +115,15 @@ body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overf
     border-color: #fff;
 }
 
-/* --- Sidebar --- */
+#current-technique-title {
+    color: var(--c-secondary);
+    margin-top: 10px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+/* --- Sidebar (Masaüstü) --- */
 .sidebar {
     flex: 1;
     background-color: var(--c-sidebar);
@@ -122,9 +132,16 @@ body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overf
     flex-direction: column;
     box-shadow: -5px 0 20px rgba(0,0,0,0.3);
     z-index: 20;
+    min-width: 300px;
 }
 
-.sidebar h3 { color: var(--c-secondary); border-bottom: 2px solid var(--c-secondary); padding-bottom: 10px; margin-bottom: 1.5rem; }
+.sidebar h3 { 
+    color: var(--c-secondary); 
+    border-bottom: 2px solid var(--c-secondary); 
+    padding-bottom: 10px; 
+    margin-bottom: 1.5rem; 
+}
+
 .technique-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
 
 .tech-btn {
@@ -136,17 +153,112 @@ body { background-color: var(--c-bg); color: var(--c-text); height: 100vh; overf
     text-align: left;
     border-radius: 8px;
     transition: 0.3s;
+    font-size: 1rem;
 }
 
 .tech-btn:hover { background: rgba(0, 0, 0, 0.4); }
 .tech-btn.active { background: var(--c-accent); color: #fff; font-weight: bold; }
 
 .info-box { background: rgba(0, 0, 0, 0.2); padding: 1.5rem; border-radius: 10px; flex-grow: 1; }
-.technique-details { margin-top: 15px; font-size: 0.9rem; color: var(--c-secondary); }
-#current-technique-title { color: var(--c-secondary); margin-top: 20px; font-weight: 300; letter-spacing: 1px; }
+.info-box h4 { margin-bottom: 10px; color: var(--c-secondary); }
+.technique-details { margin-top: 15px; font-size: 0.9rem; color: var(--c-secondary); font-weight: bold; }
 
+/* --- MOBİL UYUMLULUK (Responsive Design) --- */
 @media (max-width: 768px) {
-    .container { flex-direction: column-reverse; overflow-y: auto; }
-    .sidebar { width: 100%; flex: none; min-height: 40vh; }
-    .main-content { min-height: 60vh; padding: 10px; }
+    
+    /* 1. Konteynır: Sıralamayı ters çevir (Sidebar üstte, Main altta) */
+    .container {
+        flex-direction: column-reverse; 
+        overflow-y: auto;
+    }
+
+    /* 2. Sidebar: Üstte ince bir menü şeridi */
+    .sidebar {
+        width: 100%;
+        flex: none;
+        min-height: auto;
+        padding: 15px 10px;
+        background-color: rgba(56, 29, 46, 0.95); /* Color1'e yakın opak */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        position: sticky; /* Sayfa kaydırılsa bile üstte kalsın istenirse */
+        top: 0;
+    }
+
+    /* Başlığı ve Detaylı Açıklama kutusunu mobilde gizle/değiştir */
+    .sidebar h3 { display: none; }
+    .info-box { 
+        display: none; /* Mobilde açıklama kutusunu sidebar'dan kaldırıyoruz, aşağıya alacağız */
+    }
+
+    /* 3. Buton Listesi: Yatay Kaydırma (Chips) */
+    .technique-list {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 12px;
+        margin-bottom: 0;
+        padding-bottom: 5px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox scrollbar gizle */
+    }
+    .technique-list::-webkit-scrollbar { display: none; } /* Chrome scrollbar gizle */
+
+    .tech-btn {
+        flex: 0 0 auto;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        border-radius: 25px; /* Hap şekli */
+        background: rgba(255,255,255,0.1);
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .tech-btn.active {
+        background: var(--c-accent);
+        border-color: var(--c-accent);
+        transform: scale(1.05);
+        box-shadow: 0 2px 10px rgba(43, 143, 200, 0.4);
+    }
+
+    /* 4. Ana İçerik */
+    .main-content {
+        flex: 1;
+        justify-content: center; /* Ortala */
+        padding-top: 20px;
+        padding-bottom: 40px;
+    }
+
+    /* Mobilde özel açıklama alanı (Main içinde gösterilecek, JS ile kontrol etmiyoruz, CSS ile hile yapıyoruz) */
+    /* Not: Mobilde açıklama metni görmek isteniyorsa JS güncellemesi gerekir, 
+       şimdilik sade arayüz için sadece teknik adı ve ikonlar yeterli. */
+
+    .breathing-wrapper {
+        width: 70vmin; /* Mobilde daha büyük */
+        height: 70vmin;
+    }
+    
+    .start-text {
+        font-size: 1.5rem;
+        padding: 8px 24px;
+    }
+
+    .phases-container {
+        gap: 10px;
+    }
+    
+    .phase-bubble {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .phase-bubble svg { width: 20px; height: 20px; }
+    .phase-bubble span { font-size: 0.6rem; }
+    
+    /* Seçili teknik başlığını mobilde biraz daha yukarı al */
+    #current-technique-title {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        margin-top: 0;
+        order: -1; /* Çemberin üstüne taşı */
+    }
 }

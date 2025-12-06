@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5GCC1GC4HQ"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-5GCC1GC4HQ');
     </script>
     
@@ -22,6 +19,8 @@
 
     <div class="container">
         <main class="main-content">
+            <h2 id="current-technique-title">Teknik Seçiniz</h2>
+
             <div class="breathing-wrapper" onclick="toggleSession()">
                 <div class="circle-visual" id="breathing-circle"></div>
                 <div class="start-overlay" id="start-overlay">
@@ -30,14 +29,15 @@
             </div>
 
             <div class="phases-container" id="phases-container"></div>
-            <h2 id="current-technique-title">Teknik Seçiniz</h2>
+            
+            <div id="mobile-desc-area" style="text-align: center; color: var(--c-secondary); font-size: 0.9rem; margin-top: 20px; max-width: 80%; display: none;">
+                </div>
         </main>
 
         <aside class="sidebar">
             <h3>Nefes Teknikleri</h3>
             
-            <div class="technique-list" id="technique-list-container">
-                </div>
+            <div class="technique-list" id="technique-list-container"></div>
 
             <div class="info-box">
                 <h4>Teknik Açıklaması</h4>
