@@ -1,11 +1,62 @@
-// data.js
+// data.js - ORGANİK İKONOGRAFİK TASARIM
 
 const icons = {
-    in: '<path d="M12 2L12 22M12 2L5 9M12 2L19 9" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>', // Ok Yukarı
-    out: '<path d="M12 2L12 22M12 22L5 15M12 22L19 15" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>', // Ok Aşağı
-    hold: '<path d="M10 9v6m4-6v6" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>', // Duraklat
-    squeeze: '<path d="M18 12a6 6 0 0 1-6 6v0a6 6 0 0 1-6-6v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2z" fill="currentColor"/><path d="M8 8L6 6m10 2l2-2" stroke="currentColor" stroke-width="2"/>', // Yumruk
-    candle: '<path d="M12 2c0 0-3 2.5-3 6 0 4 6 4 6 0 0-3.5-3-6-3-6z" fill="#e8c1e8"/><rect x="10" y="8" width="4" height="14" rx="1" fill="currentColor"/>' // Mum Alevi (Basit)
+    // NEFES AL (İn) - Yukarı akan yaprak/rüzgar
+    in: `
+        <path d="M12 20C12 20 12 4 12 4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <path d="M12 4L8 8M12 4L16 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M7 12C7 12 6 10 6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <path d="M17 12C17 12 18 10 18 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+    `,
+    
+    // NEFES VER (Out) - Aşağı akan yaprak/rüzgar
+    out: `
+        <path d="M12 4C12 4 12 20 12 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <path d="M12 20L8 16M12 20L16 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M7 12C7 12 6 14 6 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <path d="M17 12C17 12 18 14 18 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+    `,
+    
+    // TUT (Hold) - Denge/Meditasyon sembolü
+    hold: `
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+        <circle cx="12" cy="12" r="3" fill="currentColor"/>
+        <path d="M12 3L12 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M12 15L12 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    `,
+    
+    // SIK (Squeeze) - Güç/Enerji sembolü (yıldırım + yumruk)
+    squeeze: `
+        <path d="M13 2L8 12L12 12L11 22L19 10L14 10L13 2Z" fill="currentColor" opacity="0.9"/>
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" opacity="0.4"/>
+    `,
+    
+    // MUM (Candle) - Alev sembolü
+    candle: `
+        <path d="M12 3C12 3 9 6 9 9C9 12 15 12 15 9C15 6 12 3 12 3Z" 
+              fill="currentColor" opacity="0.8"/>
+        <ellipse cx="12" cy="9" rx="2" ry="3" fill="currentColor" opacity="0.4"/>
+        <rect x="10.5" y="10" width="3" height="11" rx="1.5" fill="currentColor" opacity="0.6"/>
+        <ellipse cx="12" cy="21" rx="2.5" ry="1" fill="currentColor" opacity="0.5"/>
+    `,
+    
+    // EKSTRA: Lotus (Meditasyon için)
+    lotus: `
+        <path d="M12 18C12 18 8 16 8 12C8 12 10 14 12 14C14 14 16 12 16 12C16 16 12 18 12 18Z" 
+              fill="currentColor" opacity="0.7"/>
+        <path d="M12 14C12 14 10 12 6 12C6 12 8 14 12 16C16 14 18 12 18 12C14 12 12 14 12 14Z" 
+              fill="currentColor" opacity="0.5"/>
+        <circle cx="12" cy="13" r="2" fill="currentColor"/>
+    `,
+    
+    // EKSTRA: Dalga (Rezonans için)
+    wave: `
+        <path d="M2 12C4 8 6 8 8 12C10 16 12 16 14 12C16 8 18 8 20 12C22 16 24 16 24 12" 
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M2 12C4 8 6 8 8 12C10 16 12 16 14 12C16 8 18 8 20 12C22 16 24 16 24 12" 
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" 
+              opacity="0.4" transform="translate(0, 4)"/>
+    `
 };
 
 // Nefes Teknikleri Veritabanı
@@ -37,7 +88,7 @@ const techniques = {
         stepsDisplay: "Al 4s - Üfle (İnce) 8s",
         cycle: [
             { type: 'in', duration: 4000, scale: 1, label: 'Al (Burun)' },
-            { type: 'out', duration: 8000, scale: 0.3, label: 'Üfle (İnce)' } // 'candle' ikonu da kullanabilirsin
+            { type: 'candle', duration: 8000, scale: 0.3, label: 'Üfle (İnce)' }
         ]
     },
     energy: {
