@@ -1,79 +1,47 @@
+// DOM Elementleri
 const circle = document.getElementById('breathing-circle');
 const phasesContainer = document.getElementById('phases-container');
 const techniqueDesc = document.getElementById('technique-desc');
 const techniqueSteps = document.getElementById('technique-steps');
 const currentTitle = document.getElementById('current-technique-title');
-const buttons = document.querySelectorAll('.tech-btn');
+const techniqueListContainer = document.getElementById('technique-list-container');
 const overlay = document.getElementById('start-overlay');
 const overlayText = document.getElementById('overlay-text');
 
-// İkonlar
-const icons = {
-    in: '<path d="M12 2L12 22M12 2L5 9M12 2L19 9" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
-    out: '<path d="M12 2L12 22M12 22L5 15M12 22L19 15" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
-    hold: '<path d="M10 9v6m4-6v6" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>',
-    squeeze: '<path d="M18 12a6 6 0 0 1-6 6v0a6 6 0 0 1-6-6v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2z" fill="currentColor"/><path d="M8 8L6 6m10 2l2-2" stroke="currentColor" stroke-width="2"/>'
-};
-
-const techniques = {
-    calm: {
-        name: "4-7-8 Sakinleşme",
-        desc: "Uyku ve derin gevşeme için.",
-        stepsDisplay: "Al 4s - Tut 7s - Ver 8s",
-        cycle: [
-            { type: 'in', duration: 4000, scale: 1, label: 'Al (4s)' },
-            { type: 'hold', duration: 7000, scale: 1, label: 'Tut (7s)' },
-            { type: 'out', duration: 8000, scale: 0.3, label: 'Ver (8s)' }
-        ]
-    },
-    box: {
-        name: "Kutu Tekniği",
-        desc: "Odaklanma ve stres kontrolü.",
-        stepsDisplay: "Al 4 - Tut 4 - Ver 4 - Tut 4",
-        cycle: [
-            { type: 'in', duration: 4000, scale: 1, label: 'Al' },
-            { type: 'hold', duration: 4000, scale: 1, label: 'Tut' },
-            { type: 'out', duration: 4000, scale: 0.3, label: 'Ver' },
-            { type: 'hold', duration: 4000, scale: 0.3, label: 'Tut' }
-        ]
-    },
-    energy: {
-        name: "Isınma (Enerji)",
-        desc: "Vücut ısısını artırır. Tutma sırasında kaslarını sık.",
-        stepsDisplay: "Al 6 - Sık 10 - Ver 6 - Sık 10",
-        cycle: [
-            { type: 'in', duration: 6000, scale: 1, label: 'Al (6s)' },
-            { type: 'squeeze', duration: 10000, scale: 1, label: 'SIK (10s)' },
-            { type: 'out', duration: 6000, scale: 0.3, label: 'Ver (6s)' },
-            { type: 'squeeze', duration: 10000, scale: 0.3, label: 'SIK (10s)' }
-        ]
-    },
-    coherence: {
-        name: "Rezonans",
-        desc: "Kalp ritmi dengesi.",
-        stepsDisplay: "Al 5.5s - Ver 5.5s",
-        cycle: [
-            { type: 'in', duration: 5500, scale: 1, label: 'Al' },
-            { type: 'out', duration: 5500, scale: 0.3, label: 'Ver' }
-        ]
-    }
-};
-
 let currentTechnique = null;
 let timeouts = [];
-let isActive = false; // Egzersiz çalışıyor mu?
+let isActive = false;
 
-function clearAllTimeouts() {
-    timeouts.forEach(id => clearTimeout(id));
-    timeouts = [];
+// --- 1. Başlangıç: Butonları Oluştur ---
+function init() {
+    techniqueListContainer.innerHTML = ''; // Temizle
+    
+    // data.js içindeki 'techniques' objesindeki her anahtar için buton yap
+    for (const key in techniques) {
+        const tech = techniques[key];
+        const btn = document.createElement('button');
+        btn.className = 'tech-btn';
+        btn.innerText = tech.name;
+        btn.onclick = () => setTechnique(key);
+        btn.dataset.key = key; // Referans için
+        techniqueListContainer.appendChild(btn);
+    }
+
+    // Varsayılan olarak ilk tekniği seç (Genelde 'calm' veya 'candle')
+    setTechnique('calm');
 }
 
+// --- 2. Teknik Seçimi ---
 function setTechnique(key) {
-    stopSession(); // Önce durdur
+    stopSession();
     
-    buttons.forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`button[onclick="setTechnique('${key}')"]`).classList.add('active');
+    // Buton stillerini güncelle
+    document.querySelectorAll('.tech-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if(btn.dataset.key === key) btn.classList.add('active');
+    });
 
+    // Veriyi çek
     currentTechnique = techniques[key];
     currentTitle.innerText = currentTechnique.name;
     techniqueDesc.innerText = currentTechnique.desc;
@@ -82,7 +50,7 @@ function setTechnique(key) {
     createPhaseIndicators();
 }
 
-// Ana Başlat/Durdur Fonksiyonu
+// --- 3. Oturum Yönetimi (Başla/Dur) ---
 function toggleSession() {
     if (isActive) {
         stopSession();
@@ -93,13 +61,13 @@ function toggleSession() {
 
 function startSession() {
     isActive = true;
-    overlay.style.opacity = '0'; // Yazıyı gizle
+    overlay.style.opacity = '0';
     
-    // 1. Önce topu aniden küçült (Boş ciğer başlangıcı)
+    // Hazırlık: Önce küçült
     circle.style.transition = 'transform 0.5s ease-out';
     circle.style.transform = 'scale(0.3)';
 
-    // 2. Küçülme animasyonu bitince (0.5s sonra) döngüyü başlat
+    // Döngüyü başlat
     timeouts.push(setTimeout(() => {
         runCycle(0);
     }, 500));
@@ -109,25 +77,33 @@ function stopSession() {
     isActive = false;
     clearAllTimeouts();
     
-    // UI Sıfırla
     overlay.style.opacity = '1';
     overlayText.innerText = "BAŞLA";
     
-    // Topu FULL hale getir
+    // Reset: Full dolu göster
     circle.style.transition = 'transform 0.8s ease-out';
     circle.style.transform = 'scale(1)';
     
-    // Fazları temizle
     document.querySelectorAll('.phase-bubble').forEach(b => b.classList.remove('active'));
 }
 
+function clearAllTimeouts() {
+    timeouts.forEach(id => clearTimeout(id));
+    timeouts = [];
+}
+
+// --- 4. Görselleştirme ---
 function createPhaseIndicators() {
     phasesContainer.innerHTML = '';
     currentTechnique.cycle.forEach((phase, index) => {
         const bubble = document.createElement('div');
         bubble.className = 'phase-bubble';
         bubble.id = `phase-${index}`;
-        const svgHTML = `<svg viewBox="0 0 24 24">${icons[phase.type]}</svg>`;
+        
+        // Eğer data.js'te tanımlı olmayan bir ikon tipi gelirse varsayılanı kullan
+        const iconSvg = icons[phase.type] || icons['in'];
+        
+        const svgHTML = `<svg viewBox="0 0 24 24">${iconSvg}</svg>`;
         bubble.innerHTML = `${svgHTML}<span>${phase.label}</span>`;
         phasesContainer.appendChild(bubble);
     });
@@ -141,19 +117,19 @@ function runCycle(stepIndex) {
 
     const currentStep = steps[stepIndex];
 
-    // Aktif Fazı İşaretle
+    // Fazı aktif et
     document.querySelectorAll('.phase-bubble').forEach(b => b.classList.remove('active'));
     document.getElementById(`phase-${stepIndex}`).classList.add('active');
 
-    // Animasyonu Uygula
+    // Animasyonu uygula
     circle.style.transition = `transform ${currentStep.duration}ms linear`;
     circle.style.transform = `scale(${currentStep.scale})`;
 
-    // Sonraki adım
+    // Sonraki adıma geç
     timeouts.push(setTimeout(() => {
         runCycle(stepIndex + 1);
     }, currentStep.duration));
 }
 
-// Başlangıç Ayarı
-setTechnique('calm');
+// Uygulamayı Başlat
+init();

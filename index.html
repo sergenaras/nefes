@@ -11,10 +11,8 @@
 
     <div class="container">
         <main class="main-content">
-            
             <div class="breathing-wrapper" onclick="toggleSession()">
                 <div class="circle-visual" id="breathing-circle"></div>
-                
                 <div class="start-overlay" id="start-overlay">
                     <div class="start-text" id="overlay-text">BAŞLA</div>
                 </div>
@@ -26,21 +24,19 @@
 
         <aside class="sidebar">
             <h3>Nefes Teknikleri</h3>
-            <div class="technique-list">
-                <button onclick="setTechnique('calm')" class="tech-btn">4-7-8 (Sakinleşme)</button>
-                <button onclick="setTechnique('box')" class="tech-btn">Kutu Tekniği (Odak)</button>
-                <button onclick="setTechnique('energy')" class="tech-btn">Isınma (Enerji)</button>
-                <button onclick="setTechnique('coherence')" class="tech-btn">Rezonans (Denge)</button>
-            </div>
+            
+            <div class="technique-list" id="technique-list-container">
+                </div>
 
             <div class="info-box">
                 <h4>Teknik Açıklaması</h4>
-                <p id="technique-desc">Açıklama yükleniyor...</p>
+                <p id="technique-desc">Yükleniyor...</p>
                 <div class="technique-details" id="technique-steps"></div>
             </div>
         </aside>
     </div>
 
+    <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
