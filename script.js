@@ -3,8 +3,9 @@ const circle = document.getElementById('breathing-circle');
 const phasesContainer = document.getElementById('phases-container');
 const techniqueDesc = document.getElementById('technique-desc');
 const techniqueSteps = document.getElementById('technique-steps');
-const currentTitle = document.getElementById('current-technique-title');
-const techniqueListContainer = document.getElementById('technique-list-container');
+const currentDescMini = document.getElementById('current-technique-desc'); // Yeni mini açıklama alanı
+const sidebarTitle = document.getElementById('sidebar-title');
+const techniqueSelect = document.getElementById('technique-select'); // Yeni Dropdown
 const overlay = document.getElementById('start-overlay');
 const overlayText = document.getElementById('overlay-text');
 
@@ -12,21 +13,24 @@ let currentTechnique = null;
 let timeouts = [];
 let isActive = false;
 
-// --- 1. Başlangıç: Butonları Oluştur ---
+// --- 1. Başlangıç: Dropdown Doldur ---
 function init() {
-    techniqueListContainer.innerHTML = '';
+    techniqueSelect.innerHTML = '';
     
     for (const key in techniques) {
         const tech = techniques[key];
-        const btn = document.createElement('button');
-        btn.className = 'tech-btn';
-        btn.innerText = tech.name;
-        btn.onclick = () => setTechnique(key);
-        btn.dataset.key = key;
-        techniqueListContainer.appendChild(btn);
+        const option = document.createElement('option');
+        option.value = key;
+        option.innerText = tech.name;
+        techniqueSelect.appendChild(option);
     }
 
-    // Varsayılan olarak ilk tekniği seç (veya 'calm')
+    // Dropdown değiştiğinde çalışacak olay
+    techniqueSelect.addEventListener('change', (e) => {
+        setTechnique(e.target.value);
+    });
+
+    // Varsayılan olarak ilk tekniği seç
     setTechnique('calm');
 }
 
@@ -34,15 +38,18 @@ function init() {
 function setTechnique(key) {
     stopSession();
     
-    document.querySelectorAll('.tech-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if(btn.dataset.key === key) btn.classList.add('active');
-    });
+    // Dropdown değerini güncelle (JS ile çağrılırsa diye)
+    techniqueSelect.value = key;
 
     currentTechnique = techniques[key];
-    currentTitle.innerText = currentTechnique.name;
-    techniqueDesc.innerText = currentTechnique.desc;
-    techniqueSteps.innerText = currentTechnique.stepsDisplay;
+    
+    // Yazı güncellemeleri
+    if(sidebarTitle) sidebarTitle.innerText = currentTechnique.name;
+    if(techniqueDesc) techniqueDesc.innerText = currentTechnique.desc;
+    if(techniqueSteps) techniqueSteps.innerText = currentTechnique.stepsDisplay;
+    
+    // Üst kısımdaki mini açıklama
+    if(currentDescMini) currentDescMini.innerText = currentTechnique.desc;
 
     createPhaseIndicators();
 }
@@ -86,7 +93,7 @@ function clearAllTimeouts() {
     timeouts = [];
 }
 
-// --- 4. Görselleştirme (GÜNCELLENDİ: Alt Alta Metin Yapısı) ---
+// --- 4. Görselleştirme ---
 function createPhaseIndicators() {
     phasesContainer.innerHTML = '';
     
@@ -98,30 +105,25 @@ function createPhaseIndicators() {
         // İkon dosya yolunu kontrol et
         const iconPath = iconFiles[phase.type];
         
-        // 1. İkonu Ekle
         if (iconPath) {
-            // PNG dosyası varsa
             const img = document.createElement('img');
             img.src = iconPath;
             img.alt = phase.label;
             img.className = 'phase-icon';
             
-            // Yükleme hatası durumunda fallback SVG
             img.onerror = function() {
                 const iconSvg = icons[phase.type] || icons['nefes_al'];
                 bubble.innerHTML = `<svg viewBox="0 0 24 24">${iconSvg}</svg>`;
-                appendSplitLabel(bubble, phase.label); // SVG durumunda etiketi tekrar ekle
+                appendSplitLabel(bubble, phase.label);
             };
             
             bubble.appendChild(img);
         } else {
-            // Fallback: data.js'teki inline SVG'leri kullan
             const iconSvg = icons[phase.type] || icons['nefes_al'];
             bubble.innerHTML = `<svg viewBox="0 0 24 24">${iconSvg}</svg>`;
         }
         
-        // 2. Metni Ekle (Eğer img.onerror çalışmadıysa buradan ekleriz)
-        // SetTimeout kullanmıyoruz, senkron ekliyoruz ama img tagı varsa kontrol ediyoruz
+        // Metni Ekle
         if (!bubble.querySelector('.action-text')) {
              appendSplitLabel(bubble, phase.label);
         }
@@ -130,25 +132,21 @@ function createPhaseIndicators() {
     });
 }
 
-// Yardımcı Fonksiyon: Metni "İşlem" ve "Süre" olarak ayırır
 function appendSplitLabel(parent, fullText) {
-    // Daha önce eklenmişse tekrar ekleme
     if(parent.querySelector('.action-text')) return;
 
     const span = document.createElement('span');
     
-    // "Yumruk Sık (10s)" -> ["Yumruk Sık", "10s"]
     if (fullText.includes('(')) {
         const parts = fullText.split(' (');
         const actionText = parts[0]; 
-        const timeText = parts[1].replace(')', ''); // Sondaki parantezi sil
+        const timeText = parts[1].replace(')', '');
         
         span.innerHTML = `
             <div class="action-text">${actionText}</div>
             <div class="time-text">${timeText}</div>
         `;
     } else {
-        // Parantez yoksa düz yaz
         span.innerHTML = `<div class="action-text">${fullText}</div>`;
     }
     
@@ -164,14 +162,12 @@ function runCycle(stepIndex) {
 
     const currentStep = steps[stepIndex];
 
-    // Fazı aktif et
     document.querySelectorAll('.phase-bubble').forEach(b => b.classList.remove('active'));
     const activeBubble = document.getElementById(`phase-${stepIndex}`);
     if (activeBubble) {
         activeBubble.classList.add('active');
     }
 
-    // Animasyonu uygula (Eğer süre 0 ise anlık geçiş yap)
     if (currentStep.duration > 0) {
         circle.style.transition = `transform ${currentStep.duration}ms linear`;
         circle.style.transform = `scale(${currentStep.scale})`;
@@ -180,9 +176,6 @@ function runCycle(stepIndex) {
         circle.style.transform = `scale(${currentStep.scale})`;
     }
 
-    // Sonraki adıma geç
-    // Eğer süre 0 ise (örn: Yumruk Serbest), minimum bir bekleme (örn 100ms) verilebilir veya direkt geçilir.
-    // Ancak data.js'de 0 yerine 500ms verdik, o yüzden direkt duration kullanıyoruz.
     timeouts.push(setTimeout(() => {
         runCycle(stepIndex + 1);
     }, currentStep.duration));

@@ -12,7 +12,7 @@
     margin: 0; 
     padding: 0; 
     box-sizing: border-box; 
-    font-family: 'Georgia', 'Palatino', serif; /* Organik his için serif */
+    font-family: 'Georgia', 'Palatino', serif; 
 }
 
 body { 
@@ -28,36 +28,107 @@ body {
     width: 100%; 
 }
 
-/* --- Ana Alan --- */
+/* --- ANA YERLEŞİM DÜZENİ (KAYMAYI ÖNLEYEN YAPI) --- */
 .main-content {
     flex: 3;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* İçeriği yukarı ve aşağı yay, ortada boşluk bırak */
+    justify-content: space-between; 
     align-items: center;
     position: relative;
-    padding: 20px;
+    padding: 30px 20px;
+    height: 100vh; /* Tam ekran yüksekliği */
 }
 
-/* Nefes Alanı */
-.breathing-wrapper {
+/* 1. ÜST ALAN: Sabit Yükseklik */
+.top-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 10;
+    /* Üst tarafın ne kadar yer kaplayacağı belli olsun */
+    min-height: 80px; 
+}
+
+/* YENİ DROPDOWN STİLİ */
+.select-wrapper {
     position: relative;
-    width: 40vmin; 
-    height: 40vmin;
+    width: 100%;
+    max-width: 300px;
+}
+
+.tech-select {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    color: var(--c-text);
+    background: rgba(139, 154, 122, 0.2); /* Yarı saydam yeşil */
+    border: 1px solid rgba(201, 213, 184, 0.4);
+    border-radius: 12px;
+    appearance: none; /* Varsayılan oku gizle */
+    -webkit-appearance: none;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.tech-select:focus {
+    outline: none;
+    background: rgba(139, 154, 122, 0.3);
+    border-color: var(--c-secondary);
+    box-shadow: 0 0 15px rgba(201, 213, 184, 0.2);
+}
+
+.tech-select option {
+    background: var(--c-bg); /* Açılır menü arkaplanı */
+    color: var(--c-text);
+    padding: 10px;
+}
+
+/* Özel Ok İşareti */
+.select-arrow {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--c-secondary);
+    pointer-events: none;
+    font-size: 0.8rem;
+}
+
+.mini-desc {
+    color: var(--c-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+    text-align: center;
+    opacity: 0.8;
+    max-width: 400px;
+}
+
+/* 2. ORTA ALAN: Nefes Topu (Esnek) */
+.breathing-wrapper {
+    /* margin: auto sayesinde üst ve alt arasındaki boşluğa ortalanır */
+    margin: auto; 
+    
+    position: relative;
+    width: 35vmin; /* Biraz küçülttük ki sığsın */
+    height: 35vmin;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 40px; 
     cursor: pointer; 
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Nefes Topu - ORGANİK */
 .circle-visual {
     width: 100%;
     height: 100%;
     background: radial-gradient(circle, #8b9a7a 0%, #5a6b4e 100%);
-    border-radius: 47% 53% 45% 55% / 53% 47% 53% 47%; /* Organik şekil */
+    border-radius: 47% 53% 45% 55% / 53% 47% 53% 47%;
     transform: scale(1);
     box-shadow: 
         0 20px 60px rgba(0, 0, 0, 0.3),
@@ -66,21 +137,6 @@ body {
     will-change: transform, border-radius;
     transition: transform 0.1s linear;
     animation: organicMorphSubtle 12s ease-in-out infinite;
-}
-
-@keyframes organicMorphSubtle {
-    0%, 100% { 
-        border-radius: 47% 53% 45% 55% / 53% 47% 53% 47%;
-    }
-    25% { 
-        border-radius: 55% 45% 53% 47% / 47% 53% 47% 53%;
-    }
-    50% { 
-        border-radius: 45% 55% 47% 53% / 53% 47% 53% 47%;
-    }
-    75% { 
-        border-radius: 53% 47% 55% 45% / 47% 53% 47% 53%;
-    }
 }
 
 /* BAŞLA Overlay */
@@ -96,52 +152,46 @@ body {
 }
 
 .start-text {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 400;
     color: var(--c-text);
     text-transform: lowercase;
-    letter-spacing: 6px;
+    letter-spacing: 5px;
     background: rgba(45, 74, 62, 0.7);
-    padding: 15px 35px;
+    padding: 12px 30px;
     border-radius: 40px;
     border: 2px solid rgba(201, 213, 184, 0.5);
     white-space: nowrap;
     backdrop-filter: blur(5px);
 }
 
-.breathing-wrapper:hover .start-text {
-    background: rgba(139, 154, 122, 0.5);
-    border-color: var(--c-secondary);
-}
-
-/* --- Alt Göstergeler (Phases) - GÜNCELLENDİ: Geniş Boşluklu Yapı --- */
+/* 3. ALT ALAN: Fazlar (Sabit Taban) */
 .phases-container {
     display: flex;
-    gap: 40px; /* Balonlar arası mesafe ARTTIRILDI */
-    margin-bottom: 20px;
-    padding-bottom: 20px;
+    gap: 25px; 
     justify-content: center;
     align-items: flex-start;
     flex-wrap: wrap;
-    min-height: 140px; /* Alt metinlerin sığması için yer */
+    
+    /* Yükseklik sabitleme yerine margin kullanıyoruz ama 
+       çok fazla eleman varsa yukarı taşmasını engellemek için min-height */
+    min-height: 120px;
+    width: 100%;
+    margin-bottom: 20px;
 }
 
-/* 1. Kapsayıcı (Bubble) */
+/* Faz Balonları */
 .phase-bubble {
-    width: 65px;
-    height: 65px;
+    width: 55px;
+    height: 55px;
     position: relative;
     overflow: visible; 
-    background: transparent;
-    border: none;
-    box-shadow: none;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: transform 0.3s ease;
 }
 
-/* 2. İKON (PNG ve SVG) */
 .phase-bubble .phase-icon,
 .phase-bubble svg { 
     width: 100%;       
@@ -155,52 +205,40 @@ body {
     transition: all 0.3s ease;
 }
 
-.phase-bubble svg {
-    padding: 15px; 
-}
+.phase-bubble svg { padding: 12px; }
 
-/* 3. METİN KONTEYNERİ (Span) - GÜNCELLENDİ */
+/* Metin Konumlandırma */
 .phase-bubble span { 
     position: absolute;
-    top: 115%; /* İkonun hemen altı */
+    top: 115%; 
     left: 50%;
     transform: translateX(-50%);
-    
-    width: 110px; /* Genişliği kısıtla */
+    width: 100px; 
     display: flex;
-    flex-direction: column; /* Alt alta dizilim */
+    flex-direction: column;
     align-items: center;
     gap: 2px;
-    
     z-index: 2;
     pointer-events: none;
-    text-shadow: none; 
 }
 
-/* 4. YENİ: Ayrılmış Metin Stilleri */
 .action-text {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--c-secondary);
     line-height: 1.1;
     text-align: center;
-    white-space: normal;
 }
 
 .time-text {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 400;
-    color: var(--c-accent); /* Saniyeyi biraz daha sönük yap */
+    color: var(--c-accent);
     opacity: 0.9;
-    letter-spacing: 1px;
 }
 
-/* --- AKTİF DURUMLAR --- */
-
-.phase-bubble.active {
-    transform: scale(1.15);
-}
-
+/* Aktif Durumlar */
+.phase-bubble.active { transform: scale(1.15); }
 .phase-bubble.active .phase-icon,
 .phase-bubble.active svg {
     border-color: var(--c-secondary);
@@ -209,23 +247,15 @@ body {
     filter: brightness(1.2);
     opacity: 1;
 }
+.phase-bubble.active .action-text { color: var(--c-text); font-weight: 700; }
+.phase-bubble.active .time-text { color: var(--c-secondary); }
 
-/* Aktif Metin: Parlasın */
-.phase-bubble.active .action-text {
-    color: var(--c-text);
-    font-weight: 700;
-}
-.phase-bubble.active .time-text {
-    color: var(--c-secondary);
-}
-
-#current-technique-title {
-    color: var(--c-secondary);
-    margin-top: 10px;
-    font-weight: 300;
-    letter-spacing: 2px;
-    text-align: center;
-    font-size: 1.1rem;
+/* Animasyonlar */
+@keyframes organicMorphSubtle {
+    0%, 100% { border-radius: 47% 53% 45% 55% / 53% 47% 53% 47%; }
+    25% { border-radius: 55% 45% 53% 47% / 47% 53% 47% 53%; }
+    50% { border-radius: 45% 55% 47% 53% / 53% 47% 53% 47%; }
+    75% { border-radius: 53% 47% 55% 45% / 47% 53% 47% 53%; }
 }
 
 /* --- Sidebar --- */
@@ -249,41 +279,6 @@ body {
     margin-bottom: 1.5rem; 
     font-weight: 300;
     font-size: 1.3rem;
-    letter-spacing: 1px;
-}
-
-.technique-list { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 10px; 
-    margin-bottom: 2rem; 
-}
-
-.tech-btn {
-    padding: 15px 20px;
-    background: rgba(139, 154, 122, 0.15); 
-    border: 1px solid rgba(201, 213, 184, 0.3);
-    color: var(--c-secondary);
-    cursor: pointer;
-    text-align: left;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    font-size: 1rem;
-    font-weight: 400;
-}
-
-.tech-btn:hover { 
-    background: rgba(139, 154, 122, 0.25); 
-    border-color: var(--c-accent);
-    transform: translateX(5px);
-}
-
-.tech-btn.active { 
-    background: rgba(201, 213, 184, 0.25); 
-    border-color: var(--c-secondary);
-    color: var(--c-text); 
-    font-weight: 500;
-    box-shadow: 0 4px 12px rgba(139, 154, 122, 0.3);
 }
 
 .info-box { 
@@ -294,19 +289,8 @@ body {
     border: 1px solid rgba(201, 213, 184, 0.2);
 }
 
-.info-box h4 { 
-    margin-bottom: 10px; 
-    color: var(--c-secondary); 
-    font-weight: 400;
-    font-size: 1rem;
-}
-
-.info-box p {
-    color: var(--c-glow);
-    line-height: 1.6;
-    font-size: 0.95rem;
-}
-
+.info-box h4 { margin-bottom: 10px; color: var(--c-secondary); font-weight: 400; }
+.info-box p { color: var(--c-glow); line-height: 1.6; font-size: 0.95rem; }
 .technique-details { 
     margin-top: 15px; 
     font-size: 0.9rem; 
@@ -320,130 +304,40 @@ body {
 
 /* --- MOBİL UYUMLULUK --- */
 @media (max-width: 768px) {
-    
     .container {
-        flex-direction: column-reverse; 
-        overflow-y: auto;
-    }
-
-    .sidebar {
-        width: 100%;
-        flex: none;
-        min-height: auto;
-        padding: 15px 10px;
-        background: rgba(45, 74, 62, 0.95);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-        position: sticky;
-        top: 0;
-        border-left: none;
-        border-bottom: 2px solid rgba(139, 154, 122, 0.3);
-    }
-
-    .sidebar h3 { display: none; }
-    .info-box { display: none; }
-
-    /* Yatay Kaydırmalı Chips */
-    .technique-list {
-        flex-direction: row;
-        overflow-x: auto;
-        white-space: nowrap;
-        gap: 12px;
-        margin-bottom: 0;
-        padding-bottom: 5px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-    .technique-list::-webkit-scrollbar { display: none; }
-
-    .tech-btn {
-        flex: 0 0 auto;
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        border-radius: 25px;
-        background: rgba(139, 154, 122, 0.2);
-        text-align: center;
-        border: 1px solid rgba(201, 213, 184, 0.3);
-    }
-    
-    .tech-btn.active {
-        background: rgba(201, 213, 184, 0.3);
-        border-color: var(--c-secondary);
-        transform: scale(1.05);
-        box-shadow: 0 2px 10px rgba(139, 154, 122, 0.5);
-        color: var(--c-text);
+        flex-direction: column; /* Mobilde sidebar altta kalır */
+        overflow-y: hidden; /* Ana ekran kaymasın */
     }
 
     .main-content {
-        flex: 1;
-        justify-content: center;
+        height: 100vh;
         padding-top: 20px;
-        padding-bottom: 40px;
+        flex: 1;
+    }
+
+    .sidebar {
+        display: none; /* Mobilde sidebar'ı gizle, her şey dropdown'da */
+    }
+
+    .select-wrapper {
+        max-width: 90%; /* Mobilde dropdown genişlesin */
     }
 
     .breathing-wrapper {
-        width: 70vmin;
-        height: 70vmin;
-    }
-    
-    .start-text {
-        font-size: 1.5rem;
-        padding: 12px 28px;
-        letter-spacing: 4px;
+        width: 65vmin; /* Mobilde top biraz daha büyük */
+        height: 65vmin;
     }
 
-    /* Mobilde Boşluk Ayarı */
     .phases-container {
-        gap: 20px; 
-        min-height: 120px;
+        gap: 15px; 
+        min-height: 140px; /* Alttan pay bırak */
     }
     
     .phase-bubble {
-        width: 55px;
-        height: 55px;
-        margin-bottom: 25px; /* Yazılar için ekstra dikey boşluk */
+        width: 45px;
+        height: 45px;
     }
-    
-    .phase-bubble svg { 
-        width: 20px; 
-        height: 20px; 
-    }
-    
-    /* Mobilde yazı boyutları */
-    .action-text {
-        font-size: 0.7rem;
-    }
-    
-    .time-text {
-        font-size: 0.65rem;
-    }
-    
-    #current-technique-title {
-        font-size: 1.1rem;
-        margin-bottom: 20px;
-        margin-top: 0;
-        order: -1;
-    }
-}
 
-/* --- EXTRA: Yumuşak Pulse Animasyonu --- */
-@media (prefers-reduced-motion: no-preference) {
-    .circle-visual {
-        animation: organicMorphSubtle 12s ease-in-out infinite, 
-                   subtlePulse 6s ease-in-out infinite;
-    }
-    
-    @keyframes subtlePulse {
-        0%, 100% { 
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.3),
-                0 0 40px rgba(139, 154, 122, 0.2),
-                inset 0 0 40px rgba(201, 213, 184, 0.15);
-        }
-        50% { 
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.3),
-                0 0 60px rgba(139, 154, 122, 0.4),
-                inset 0 0 50px rgba(201, 213, 184, 0.25);
-        }
-    }
+    .action-text { font-size: 0.65rem; }
+    .time-text { font-size: 0.6rem; }
 }
