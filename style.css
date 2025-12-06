@@ -114,16 +114,16 @@ body {
     border-color: var(--c-secondary);
 }
 
-/* --- Alt Göstergeler (Phases) - GÜNCELLENDİ --- */
+/* --- Alt Göstergeler (Phases) - GÜNCELLENDİ: Geniş Boşluklu Yapı --- */
 .phases-container {
     display: flex;
-    gap: 25px; /* Yuvarlaklar arası boşluk */
+    gap: 40px; /* Balonlar arası mesafe ARTTIRILDI */
     margin-bottom: 20px;
-    padding-bottom: 20px; /* Yazıların kesilmemesi için alt boşluk */
+    padding-bottom: 20px;
     justify-content: center;
-    align-items: flex-start; /* Üstten hizala */
+    align-items: flex-start;
     flex-wrap: wrap;
-    min-height: 120px; /* Yazıların sığması için yükseklik arttırıldı */
+    min-height: 140px; /* Alt metinlerin sığması için yer */
 }
 
 /* 1. Kapsayıcı (Bubble) */
@@ -131,78 +131,76 @@ body {
     width: 65px;
     height: 65px;
     position: relative;
-    
-    /* ÖNEMLİ: Yazının dışarı taşmasına izin ver */
     overflow: visible; 
-    
     background: transparent;
     border: none;
     box-shadow: none;
-    
     display: flex;
     justify-content: center;
     align-items: center;
-    
     transition: transform 0.3s ease;
 }
 
-/* 2. İKON (PNG ve SVG): Yuvarlak şekil ve stil */
+/* 2. İKON (PNG ve SVG) */
 .phase-bubble .phase-icon,
 .phase-bubble svg { 
     width: 100%;       
     height: 100%;      
     object-fit: cover; 
-    
     border-radius: 50%; 
-    
-    /* Yuvarlak buton stili */
     background: rgba(139, 154, 122, 0.2);
     border: 2px solid rgba(201, 213, 184, 0.4);
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    
     z-index: 1; 
     transition: all 0.3s ease;
 }
 
-/* SVG Fallback için özel ayar */
 .phase-bubble svg {
     padding: 15px; 
 }
 
-/* 3. METİN (Span): İkonun ALTINA yerleşim */
+/* 3. METİN KONTEYNERİ (Span) - GÜNCELLENDİ */
 .phase-bubble span { 
     position: absolute;
-    /* İkonun %115 aşağısından başlat (hemen altı) */
-    top: 115%; 
+    top: 115%; /* İkonun hemen altı */
     left: 50%;
-    transform: translateX(-50%); /* Yatayda ortala */
+    transform: translateX(-50%);
     
-    width: 120px; /* Genişlik ver ki satıra sığsın */
-    text-align: center;
-    
-    font-size: 0.85rem; 
-    font-weight: 500;
-    color: var(--c-secondary); /* Temaya uygun açık yeşil */
-    letter-spacing: 0.5px;
+    width: 110px; /* Genişliği kısıtla */
+    display: flex;
+    flex-direction: column; /* Alt alta dizilim */
+    align-items: center;
+    gap: 2px;
     
     z-index: 2;
     pointer-events: none;
-    
-    /* Eski gölgeyi kaldırdık, temiz görünüm */
     text-shadow: none; 
+}
+
+/* 4. YENİ: Ayrılmış Metin Stilleri */
+.action-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--c-secondary);
+    line-height: 1.1;
+    text-align: center;
+    white-space: normal;
+}
+
+.time-text {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--c-accent); /* Saniyeyi biraz daha sönük yap */
+    opacity: 0.9;
+    letter-spacing: 1px;
 }
 
 /* --- AKTİF DURUMLAR --- */
 
-/* Aktif Kapsayıcı: Büyüsün */
 .phase-bubble.active {
     transform: scale(1.15);
-    background: transparent;
-    border: none;
-    box-shadow: none;
 }
 
-/* Aktif İkon: Parlasın */
 .phase-bubble.active .phase-icon,
 .phase-bubble.active svg {
     border-color: var(--c-secondary);
@@ -212,10 +210,13 @@ body {
     opacity: 1;
 }
 
-/* Aktif Metin: Rengi canlansın */
-.phase-bubble.active span {
-    color: var(--c-text); /* Tam beyaz/krem */
-    font-weight: bold;
+/* Aktif Metin: Parlasın */
+.phase-bubble.active .action-text {
+    color: var(--c-text);
+    font-weight: 700;
+}
+.phase-bubble.active .time-text {
+    color: var(--c-secondary);
 }
 
 #current-technique-title {
@@ -390,15 +391,16 @@ body {
         letter-spacing: 4px;
     }
 
+    /* Mobilde Boşluk Ayarı */
     .phases-container {
-        gap: 15px; /* Mobilde ikonlar arası boşluk */
-        min-height: 100px;
+        gap: 20px; 
+        min-height: 120px;
     }
     
     .phase-bubble {
         width: 55px;
         height: 55px;
-        margin-bottom: 20px; /* Yazılar birbirine girmesin */
+        margin-bottom: 25px; /* Yazılar için ekstra dikey boşluk */
     }
     
     .phase-bubble svg { 
@@ -406,9 +408,13 @@ body {
         height: 20px; 
     }
     
-    .phase-bubble span { 
-        font-size: 0.7rem; 
-        width: 100px;
+    /* Mobilde yazı boyutları */
+    .action-text {
+        font-size: 0.7rem;
+    }
+    
+    .time-text {
+        font-size: 0.65rem;
     }
     
     #current-technique-title {

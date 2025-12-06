@@ -66,10 +66,10 @@ const techniques = {
         cycle: [
             { type: 'nefes_al', duration: 6000, scale: 1, label: 'Al (6s)' },
             { type: 'yumruk_sik', duration: 10000, scale: 1, label: 'Yumruk Sık (10s)' },
-            { type: 'yumruk_serbest', duration: 500, scale: 1, label: 'Serbest Bırak' }, // 0 yerine 0.5sn eklendi ki geçiş belli olsun
+            { type: 'yumruk_serbest', duration: 1000, scale: 1, label: 'Serbest Bırak (1s)' },
             { type: 'nefes_ver', duration: 6000, scale: 0.3, label: 'Ver (6s)' },
             { type: 'yumruk_sik', duration: 10000, scale: 0.3, label: 'Yumruk Sık (10s)' },
-            { type: 'yumruk_serbest', duration: 500, scale: 0.3, label: 'Serbest Bırak' }
+            { type: 'yumruk_serbest', duration: 1000, scale: 0.3, label: 'Serbest Bırak (1s)' }
         ]
     },
     coherence: {

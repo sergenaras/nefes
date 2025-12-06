@@ -26,6 +26,7 @@ function init() {
         techniqueListContainer.appendChild(btn);
     }
 
+    // Varsayılan olarak ilk tekniği seç (veya 'calm')
     setTechnique('calm');
 }
 
@@ -85,7 +86,7 @@ function clearAllTimeouts() {
     timeouts = [];
 }
 
-// --- 4. Görselleştirme (İkonları PNG Dosyalarından Yükle) ---
+// --- 4. Görselleştirme (GÜNCELLENDİ: Alt Alta Metin Yapısı) ---
 function createPhaseIndicators() {
     phasesContainer.innerHTML = '';
     
@@ -97,39 +98,61 @@ function createPhaseIndicators() {
         // İkon dosya yolunu kontrol et
         const iconPath = iconFiles[phase.type];
         
+        // 1. İkonu Ekle
         if (iconPath) {
-            // PNG dosyası varsa <img> tag ile yükle
+            // PNG dosyası varsa
             const img = document.createElement('img');
             img.src = iconPath;
             img.alt = phase.label;
             img.className = 'phase-icon';
             
-            // Yükleme hatası durumunda fallback kullan
+            // Yükleme hatası durumunda fallback SVG
             img.onerror = function() {
-                // Sessizce fallback'e geç
-                const iconSvg = icons[phase.type] || icons['in'];
-                bubble.innerHTML = `
-                    <svg viewBox="0 0 24 24">${iconSvg}</svg>
-                    <span>${phase.label}</span>
-                `;
+                const iconSvg = icons[phase.type] || icons['nefes_al'];
+                bubble.innerHTML = `<svg viewBox="0 0 24 24">${iconSvg}</svg>`;
+                appendSplitLabel(bubble, phase.label); // SVG durumunda etiketi tekrar ekle
             };
             
-            const span = document.createElement('span');
-            span.textContent = phase.label;
-            
             bubble.appendChild(img);
-            bubble.appendChild(span);
         } else {
             // Fallback: data.js'teki inline SVG'leri kullan
-            const iconSvg = icons[phase.type] || icons['in'];
-            bubble.innerHTML = `
-                <svg viewBox="0 0 24 24">${iconSvg}</svg>
-                <span>${phase.label}</span>
-            `;
+            const iconSvg = icons[phase.type] || icons['nefes_al'];
+            bubble.innerHTML = `<svg viewBox="0 0 24 24">${iconSvg}</svg>`;
+        }
+        
+        // 2. Metni Ekle (Eğer img.onerror çalışmadıysa buradan ekleriz)
+        // SetTimeout kullanmıyoruz, senkron ekliyoruz ama img tagı varsa kontrol ediyoruz
+        if (!bubble.querySelector('.action-text')) {
+             appendSplitLabel(bubble, phase.label);
         }
         
         phasesContainer.appendChild(bubble);
     });
+}
+
+// Yardımcı Fonksiyon: Metni "İşlem" ve "Süre" olarak ayırır
+function appendSplitLabel(parent, fullText) {
+    // Daha önce eklenmişse tekrar ekleme
+    if(parent.querySelector('.action-text')) return;
+
+    const span = document.createElement('span');
+    
+    // "Yumruk Sık (10s)" -> ["Yumruk Sık", "10s"]
+    if (fullText.includes('(')) {
+        const parts = fullText.split(' (');
+        const actionText = parts[0]; 
+        const timeText = parts[1].replace(')', ''); // Sondaki parantezi sil
+        
+        span.innerHTML = `
+            <div class="action-text">${actionText}</div>
+            <div class="time-text">${timeText}</div>
+        `;
+    } else {
+        // Parantez yoksa düz yaz
+        span.innerHTML = `<div class="action-text">${fullText}</div>`;
+    }
+    
+    parent.appendChild(span);
 }
 
 // --- 5. Animasyon Döngüsü ---
@@ -148,11 +171,18 @@ function runCycle(stepIndex) {
         activeBubble.classList.add('active');
     }
 
-    // Animasyonu uygula
-    circle.style.transition = `transform ${currentStep.duration}ms linear`;
-    circle.style.transform = `scale(${currentStep.scale})`;
+    // Animasyonu uygula (Eğer süre 0 ise anlık geçiş yap)
+    if (currentStep.duration > 0) {
+        circle.style.transition = `transform ${currentStep.duration}ms linear`;
+        circle.style.transform = `scale(${currentStep.scale})`;
+    } else {
+        circle.style.transition = 'none';
+        circle.style.transform = `scale(${currentStep.scale})`;
+    }
 
     // Sonraki adıma geç
+    // Eğer süre 0 ise (örn: Yumruk Serbest), minimum bir bekleme (örn 100ms) verilebilir veya direkt geçilir.
+    // Ancak data.js'de 0 yerine 500ms verdik, o yüzden direkt duration kullanıyoruz.
     timeouts.push(setTimeout(() => {
         runCycle(stepIndex + 1);
     }, currentStep.duration));
