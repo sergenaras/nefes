@@ -28,8 +28,8 @@ const icons = {
 // Nefes Teknikleri Veritabanı (Metinlerdeki bozulmalar düzeltildi)
 const techniques = {
     calm: {
-        name: "4-7-8 Sakinleşme",
-        desc: "Uyku ve derin gevşeme için. Dilini damağına değdir.",
+        name: "Sakinleşme",
+        desc: "Uyku ve derin gevşeme için. Stresi azaltır.",
         stepsDisplay: "Al 4s - Tut 7s - Ver 8s",
         cycle: [
             { type: 'nefes_al', duration: 4000, scale: 1, label: 'Al (4s)' },
@@ -51,7 +51,7 @@ const techniques = {
     yavas_ufle: {
         name: "Mum Nefesi",
         desc: "Dudaklarını büz, hayali bir mumun alevini söndürmeden titret.",
-        stepsDisplay: "Al 4s - Üfle (İnce) 8s",
+        stepsDisplay: "Al 4s - Üfle 8s",
         cycle: [
             { type: 'nefes_al', duration: 4000, scale: 1, label: 'Al (4s)' },
             { type: 'yavas_ufle', duration: 8000, scale: 0.3, label: 'Üfle (8s)' }
@@ -59,22 +59,22 @@ const techniques = {
     },
     energy: {
         name: "Isınma (Enerji)",
-        desc: "Vücut ısısını artırır (Termojenez). Tutarken tüm vücudu KAS.",
+        desc: "Vücut ısısını artırır. Tutarken tüm vücudu KAS.",
         stepsDisplay: "Al 6 - Sık 10 - Ver 6 - Sık 10",
         // Not: duration: 0, animasyonda geçiş efekti yaratmaz. 
         // Kullanıcı arayüzünde sadece ikonun değişmesini sağlar.
         cycle: [
             { type: 'nefes_al', duration: 6000, scale: 1, label: 'Al (6s)' },
-            { type: 'yumruk_sik', duration: 10000, scale: 1, label: 'Yumruk Sık (10s)' },
-            { type: 'yumruk_serbest', duration: 1000, scale: 1, label: 'Serbest Bırak (1s)' },
+            { type: 'yumruk_sik', duration: 10000, scale: 1, label: 'Sık (10s)' },
+            { type: 'yumruk_serbest', duration: 1000, scale: 1, label: 'Serbest (1s)' },
             { type: 'nefes_ver', duration: 6000, scale: 0.3, label: 'Ver (6s)' },
-            { type: 'yumruk_sik', duration: 10000, scale: 0.3, label: 'Yumruk Sık (10s)' },
-            { type: 'yumruk_serbest', duration: 1000, scale: 0.3, label: 'Serbest Bırak (1s)' }
+            { type: 'yumruk_sik', duration: 10000, scale: 0.3, label: 'Sık (10s)' },
+            { type: 'yumruk_serbest', duration: 1000, scale: 0.3, label: 'Serbest (1s)' }
         ]
     },
     coherence: {
         name: "Rezonans",
-        desc: "Kalp ritmi dengesi (HRV). Akışkan ve duraksız.",
+        desc: "Kalp ritmi dengesi (HRV)",
         stepsDisplay: "Al 5.5s - Ver 5.5s",
         cycle: [
             { type: 'nefes_al', duration: 5500, scale: 1, label: 'Al (5.5s)' },
